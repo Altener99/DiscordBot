@@ -2,9 +2,9 @@ const {Client, IntentsBitField} = require('discord.js');
 const express = require('express');
 const app = express();
 const env = require('dotenv').config();
-const connectDB = require('./database');
-const User = require('../models/User');
-const Message = require('../models/messages');
+const connectDB = require('./src/database');
+const User = require('./models/User');
+const Message = require('./models/messages');
 const cors = require('cors');
 
 connectDB();
