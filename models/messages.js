@@ -21,6 +21,12 @@ const messageSchema = new mongoose.Schema({
     
             type: String,
             required: true
+        },
+        userId: {
+
+            type: String,
+            required: true
+
         }
     });
 

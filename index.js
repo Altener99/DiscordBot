@@ -21,6 +21,7 @@ const client = new Client({
         IntentsBitField.Flags.GuildMessages,
         IntentsBitField.Flags.GuildMembers,
         IntentsBitField.Flags.MessageContent,
+        IntentsBitField.Flags.GuildPresences
     ]
 
 });
@@ -62,7 +63,7 @@ client.on('messageCreate', (msg)=> {
     if(msg)
     {
            const {content, createdTimestamp} = msg;
-           const {globalName, avatar} = msg.author;
+           const {globalName, avatar, id} = msg.author;
            const date = new Date(createdTimestamp);
 
            try{
@@ -73,6 +74,7 @@ client.on('messageCreate', (msg)=> {
             content:content,
             date:date,
             avatar:avatar,
+            userId:id
 
            });
 
@@ -161,6 +163,49 @@ app.get('/logs', async (req, res) => {
     const messages = await Message.find({}).sort({date:-1});
     res.json(messages);
 
+});
+
+app.get('/users', async (req, res) => {
+
+
+    try {
+        const guild = client.guilds.cache.get("1291508814591561768");
+    
+        if (!guild) {
+          console.error('Guild not found');
+          return;
+        }
+    
+        // Fetch all members
+        await guild.members.fetch(); // Fetches all members from the API
+        const memberNames = guild.members.cache.map((member) =>{
+
+            if(!member.user.bot)
+            {
+                return {
+
+                    
+                    globalName: member.user.globalName,
+                    avatar: member.user.displayAvatarURL(),
+                    id: member.user.id,
+                    username: member.user.username
+                }
+            }
+            return
+
+        }).filter(name=>name);
+
+        // const members = memberNames.reverse();
+
+        res.json(memberNames);
+    
+        console.log('Members:', memberNames);
+        return memberNames;
+      } catch (error) {
+        console.error('Error fetching members:', error);
+      }
+
+    
 });
 
 
